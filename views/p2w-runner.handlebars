@@ -1,0 +1,222 @@
+<h2>🌴🍌🐒🌴 Banano P2W Runner 🌴🍌🐒🌴</h2>
+<div class="address">
+  {{#if noAccount}}
+    <p>
+      <form class="display_inline padding_20px" method="POST">
+        <p>
+          Account
+          <div class="address">
+            <input class="address_input" type="text" name="account" size="64">
+          </div>
+        </p>
+        <p>
+          <input class="address_input" type="submit" name="action" value="login">
+        </p>
+      </form>
+    </p>
+  {{else}}
+    <p>
+      <form class="display_inline padding_20px" method="POST">
+        <input class="address_input" type="submit" name="action" value="Refresh">
+      </form>
+    </p>
+  {{/if}}
+  <p>
+    <form class="display_inline padding_20px" method="POST" action="/faq">
+      <input class="address_input" type="submit" name="action" value="FAQ">
+    </form>
+  </p>
+</div>
+<div class="address">
+  {{#if gameStarted}}
+    {{#unless noAccount}}
+      <p>
+        Moves Left: {{timer}} of {{maxTimer}}
+      </p>
+      <p>
+        Pot: {{pot}}
+      </p>
+      {{#with player}}
+        <p>
+          Your Bans: {{bans}}
+        </p>
+        <p>
+          Remainder of last deposit: {{totalBansRemainder}}
+        </p>
+      {{/with}}
+    {{/unless}}
+  {{/if}}
+</div>
+{{#if gameStarted}}
+  {{#with player}}
+    <div class="address">
+      <p>
+        Your Next Move Requires a deposit of at least {{nextMoveMinBans}} Bananos.
+      </p>
+      <p>
+        You can pay {{payToWinBans}} Bananos right now to end the game.
+      </p>
+      <p>
+        Moves may require more Bananos depending on if other players move before you do.
+      </p>
+    </div>
+  {{/with}}
+{{/if}}
+<hr>
+<table id="racetrackTable" class="racetrack" data-max-timer="{{maxTimer}}">
+  <tr>
+    <th>Nickname</th>
+    <th>Position</th>
+    <th>Racetrack</th>
+    <th></th>
+  </tr>
+  {{#each currentPlayers}}
+    <tr>
+      <td>{{nickname}}</td>
+      <td>{{bans}}</td>
+      <td name="racetrackLane" class="racetrackLane" data-bans="{{bans}}" data-next="0" data-is-player="{{isPlayer}}"></td>
+      <td></td>
+    </tr>
+  {{/each}}
+  {{#if gameStarted}}
+    {{#with player}}
+      <tr>
+        <td colspan="4">
+          <hr>
+        </td>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Next Move</th>
+      </tr>
+      {{#each moves}}
+        <tr>
+          <td></td>
+          <td></td>
+          <td name="racetrackLane" class="racetrackLane" data-bans="{{../bans}}" data-next="{{moveBans}}" data-is-player="true">
+          </td>
+          <td>
+            <form class="display_inline padding_20px" target="_blank" method="GET" action="https://vault.banano.cc/send?to=&amount={{moveBans}}&from={{../../account}}">
+              <input type="hidden" name="to" value="{{../../depositAccount}}">
+              <input type="hidden" name="amount" value="{{moveBans}}">
+              <input type="hidden" name="from" value="{{../../account}}">
+              <button class="offwhite" type="submit">{{label}}: ({{moveBans}})</button>
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    {{/with}}
+</table>
+{{/if}}
+{{#if gameStarted}}
+  {{#if gameHasNoPlayers}}
+    <h1>New Game has started, But there are no players yet!</h1>
+    <p>
+      Send any amount of bananos the deposit account to become player one!
+    </p>
+    <div class="address">
+      <form class="display_inline" method="POST">
+        <p>
+          <input id="depositAccount" class="transparent centered bold" type="text" name="account" size="64" value="{{depositAccount}}" readonly>
+        </p>
+        <button class="offwhite" onclick="return copyServerAccount()">Copy To Clipboard</button>
+      </form>
+      <form class="display_inline" target="_blank" method="GET" action="https://creeper.banano.cc/explorer/account/{{depositAccount}}/history">
+        <button class="offwhite" type="submit">Open In Creeper</button>
+      </form>
+    </div>
+  {{/if}}
+{{/if}}
+{{#unless noAccount}}
+  <h2>Player Account Information</h2>
+  <p>
+    <div class="address">
+      {{account}}
+    </div>
+    <form class="display_inline padding_20px" method="POST">
+      <p>
+        <input class="address_input" type="submit" name="action" value="logout">
+      </p>
+    </form>
+  </p>
+{{/unless}}
+<p></p>
+<div class="address">
+  <h2>Server Deposit Account</h2>
+  <form class="display_inline" method="POST">
+    <p>
+      <input id="depositAccount" class="transparent centered bold" type="text" name="account" size="64" value="{{depositAccount}}" readonly>
+    </p>
+    <button class="offwhite" onclick="return copyServerAccount()">Copy To Clipboard</button>
+  </form>
+  <form class="display_inline" target="_blank" method="GET" action="https://creeper.banano.cc/explorer/account/{{depositAccount}}/history">
+    <button class="offwhite" type="submit">Open In Creeper</button>
+  </form>
+</div>
+<script>
+  const backgroundEmojis = ['🌱', '🌳'];
+
+  const getRandom = (min, max) => {
+    return Math.random() * (max - min) + min;
+  };
+
+  const getRandomInt = (min, max) => {
+    return Math.floor(getRandom(Math.floor(min), Math.floor(max)));
+  };
+
+  const getRandomArrayElt = (array) => {
+    const ix = getRandomInt(0, array.length);
+    return array[ix];
+  };
+
+  const onLoad = () => {
+    const racetrackTable = document.getElementById('racetrackTable');
+    const racetracks = document.getElementsByName('racetrackLane');
+    const maxTimer = parseInt(racetrackTable.dataset.maxTimer);
+    racetracks.forEach((racetrack) => {
+      const bans = parseInt(racetrack.dataset.bans);
+      const next = parseInt(racetrack.dataset.next);
+      const isPlayer = JSON.parse(racetrack.dataset.isPlayer);
+      let html = '<table class="RacetrackField"><tr>';
+      for (let ix = 0; ix < maxTimer; ix++) {
+        let emoji;
+        let bgColor = 'bg_brown';
+        if (ix == bans + next) {
+          emoji = '🐒';
+          bgColor = 'bg_lightbrown';
+          if (isPlayer) {
+            bgColor = 'bg_offwhite';
+          }
+        } else if ((ix >= bans) && (ix < bans + next)) {
+          emoji = '🍌';
+        } else {
+          emoji = getRandomArrayElt(backgroundEmojis);
+        }
+        html += `<td class="${bgColor}"><img class="px20x20" src="emojis/${emoji}.png"></td>`;
+      }
+      html += '</tr></table>';
+      racetrack.innerHTML = html;
+    });
+  }
+
+  const copyServerAccount = () => {
+    try {
+      /* Get the text field */
+      var copyText = document.getElementById('depositAccount');
+
+      /* Select the text field */
+      copyText.select();
+
+      /* Copy the text inside the text field */
+      document.execCommand('copy');
+
+      /* Alert the copied text */
+      alert('Copied the text: ' + copyText.value);
+    } catch (error) {
+      alert('Error copying the text: ' + copyText.value + ' ' + error);
+    }
+    return false;
+  }
+</script>

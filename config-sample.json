@@ -1,0 +1,8 @@
+{
+  "bananodeUrl": "https://kaliumapi.appditto.com/api",
+  "checkPendingTimerMs": 30000,
+  "cookieSecret": "",
+  "port": "8282",
+  "seed": "",
+  "representative": ""
+}

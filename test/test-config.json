@@ -1,0 +1,8 @@
+{
+  "bananodeUrl": "https://kaliumapi.appditto.com/api",
+  "checkPendingTimerMs": 10000,
+  "cookieSecret": "CD24C4D90B092672F539A691BC13BAF1FC36FD5068C6BDDFD1AFF68D35E0F0D2",
+  "port": "8282",
+  "seed": "0C18CD74A1F307E7D6803D33A22E0D92C9E4508997CEFE3D8D4CD97EA9487686",
+  "representative": "ban_1towin9fujcw39s4src6q5jsxgzxrdxfi8gykunhjgowpxrp1uytay5mjwqc"
+}
