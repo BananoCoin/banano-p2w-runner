@@ -18,23 +18,23 @@
   "author": "Coranos",
   "license": "MIT",
   "dependencies": {
-    "@bananocoin/bananojs": "^1.0.13",
+    "@bananocoin/bananojs": "^2.0.11",
     "blakejs": "^1.1.0",
     "body-parser": "^1.18.3",
-    "chalk": "^2.4.2",
-    "cookie-parser": "^1.4.4",
+    "chalk": "^4.1.0",
+    "cookie-parser": "^1.4.5",
     "express": "^4.16.4",
-    "express-handlebars": "^3.0.2",
-    "request": "^2.88.0",
+    "express-handlebars": "^5.1.0",
+    "request": "^2.88.2",
     "rtc": "^3.4.0",
     "socket.io": "^2.3.0"
   },
   "preferGlobal": true,
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "eslint-config-google": "^0.12.0",
-    "mocha": "^6.2.0",
-    "nyc": "^14.1.1"
+    "eslint": "^7.8.1",
+    "eslint-config-google": "^0.14.0",
+    "mocha": "^8.1.3",
+    "nyc": "^15.1.0"
   }
 }
