@@ -27,7 +27,7 @@
     "express-handlebars": "^5.1.0",
     "request": "^2.88.2",
     "rtc": "^3.4.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "preferGlobal": true,
   "devDependencies": {
